@@ -1,0 +1,75 @@
+{
+    "functions": ["test", "toggle", "stepOrders"],
+    "rules": {
+        "stepProps": {
+            "description": "Step Required property",
+            "message": "Step is missing the {{property}}",
+            "given": "$.properties.*",
+            "severity": "error",
+            "then": [
+                {
+                    "field": "type",
+                    "function": "truthy"
+                },
+                {
+                    "field": "description",
+                    "function": "truthy"
+                }
+            ]
+        },
+        "rootProps": {
+            "description": "Root required property",
+            "message": "Root is missing the {{property}}",
+            "given": "$",
+            "severity": "error",
+            "then": [
+                {
+                    "field": "type",
+                    "function": "truthy"
+                },
+                {
+                    "field": "title",
+                    "function": "truthy"
+                },
+                {
+                    "field": "properties",
+                    "function": "truthy"
+                },
+                {
+                    "field": "stepOrders",
+                    "function": "truthy"
+                }
+            ]
+        },
+        "props": {
+            "description": "Required property",
+            "message": "Missing the {{property}}",
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": [
+                {
+                    "field": "type",
+                    "function": "truthy"
+                },
+                {
+                    "field": "description",
+                    "function": "truthy"
+                }
+            ]
+        },
+        "toggle": {
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": {
+                "function": "toggle"
+            }
+        },
+        "stepOrders": {
+            "given": "$",
+            "severity": "error",
+            "then": {
+                "function": "stepOrders"
+            }
+        }
+    }
+}
