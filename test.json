@@ -18,7 +18,7 @@
             "description": "Загальні відомості",
             "properties": {
                 "isKszi": {
-                    "type": "boolean",
+                    "type": "bolean",
                     "control": "toggle",
                     "offText": "Ні",
                     "onText": "Так",

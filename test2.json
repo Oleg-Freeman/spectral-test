@@ -99,7 +99,7 @@
                     "type": "object",
                     "description": "Відомості про форму функціонування ІР (можливо обрати одне значення)",
                     "control": "register",
-                    "keyId": "48",
+                    "keyId": 48,
                     "multiple": false,
                     "checkRequired": "() => true"
                 },
@@ -531,7 +531,7 @@
                             "network": {
                                 "type": "array",
                                 "control": "register.select",
-                                "keyId": "56",
+                                "keyId": 56,
                                 "multiple": true,
                                 "sample": "Примітка: потрібне обрати"
                             },
@@ -563,7 +563,7 @@
                             "interface": {
                                 "type": "array",
                                 "control": "register",
-                                "keyId": "42",
+                                "keyId": 42,
                                 "multiple": true,
                                 "sample": "Примітка: множинний вибір",
                                 "sortBy": {
@@ -584,7 +584,7 @@
                             "infoOrg": {
                                 "type": "array",
                                 "control": "register",
-                                "keyId": "57",
+                                "keyId": 57,
                                 "multiple": true,
                                 "sample": "Примітка: множинний вибір"
                             },
@@ -680,7 +680,7 @@
                                 "type": "object",
                                 "description": "Тип інфраструктури",
                                 "control": "register",
-                                "keyId": "58",
+                                "keyId": 58,
                                 "multiple": false
                             },
                             "name": {
@@ -812,7 +812,7 @@
                     "type": "object",
                     "description": "Категорія інформації, яка обробляється в інформаційному ресурсі",
                     "control": "register",
-                    "keyId": "59",
+                    "keyId": 59,
                     "multiple": false,
                     "sample": "Примітка: потрібне обрати, одиничний вибір"
                 },
@@ -997,7 +997,7 @@
                     "type": "array",
                     "description": "Типи засобів криптографічного захисту інформації (КЗІ), що використовуються для інформаційного обміну",
                     "control": "register",
-                    "keyId": "60",
+                    "keyId": 60,
                     "multiple": true,
                     "sample": "Примітка: потрібне обрати, множинний вибір"
                 },
@@ -1351,7 +1351,7 @@
                     "type": "object",
                     "description": "Спосіб взаємодії",
                     "control": "register",
-                    "keyId": "62",
+                    "keyId": 62,
                     "multiple": false,
                     "sortBy": {
                         "data.codePriority": "asc"
@@ -1362,7 +1362,7 @@
                     "type": "array",
                     "description": "Передбачені протоколи взаємодії",
                     "control": "register",
-                    "keyId": "43",
+                    "keyId": 43,
                     "multiple": true,
                     "sample": "Примітка: потрібне обрати (множинний вибір)"
                 },
@@ -1370,7 +1370,7 @@
                     "type": "array",
                     "description": "Формати (повідомлень) передачі інформації, визначені власником інформаційного ресурсу (інформації)",
                     "control": "register",
-                    "keyId": "44",
+                    "keyId": 44,
                     "multiple": true,
                     "sample": "Примітка: потрібне обрати (множинний вибір)"
                 },

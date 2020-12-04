@@ -1,8 +1,6 @@
 {
     "functions": [
-        "toggle",
         "stepOrders",
-        "register",
         "type",
         "description",
         "properties",
@@ -73,13 +71,6 @@
                 }
             ]
         },
-        "toggle": {
-            "given": "$.properties.*.properties.*",
-            "severity": "error",
-            "then": {
-                "function": "toggle"
-            }
-        },
         "properties": {
             "given": "$.properties.*.properties.*",
             "severity": "error",
@@ -113,13 +104,6 @@
             "severity": "error",
             "then": {
                 "function": "stepOrders"
-            }
-        },
-        "register": {
-            "given": "$.properties.*.properties.*",
-            "severity": "error",
-            "then": {
-                "function": "register"
             }
         }
     }
