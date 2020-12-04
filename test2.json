@@ -1,0 +1,1437 @@
+{
+    "#TODO": "індекси для масивів, замінити 0 на номер індекса",
+    "title": "Відомості про інформаційний ресурс та інформацію, що обробляється",
+    "type": "object",
+    "signRequired": true,
+    "isP7sSign": false,
+    "forceRedirect": true,
+    "pdfRequired": true,
+    "fileName": "Відомості про інформаційний ресурс та інформацію, що обробляється",
+    "finalScreen": {
+        "title": "Відомості направлено на опрацювання",
+        "subtitle": "Очікуйте на інформацію про стан опрацювання наданих відомостей"
+    },
+    "stepOrders": "(allStepsData) => ['genInfo', 'funcInfo','informationInfo', 'addsubjectInfo', 'additionalInfo', 'resUsers', 'resInfrastructure', 'secureInfo', 'encryptInfo', 'techInfo', 'testInfo', 'industrialEnv', 'elInteraction']",
+    "calcTriggers": [],
+    "properties": {
+        "calculated": {
+            "type": "object",
+            "description": "for calculations",
+            "properties": {
+                "userId": {
+                    "type": "string",
+                    "value": "user.id",
+                    "description": "for calculations"
+                }
+            },
+            "required": []
+        },
+        "genInfo": {
+            "type": "object",
+            "description": "Загальні відомості про інформаційний ресурс (ІР)",
+            "properties": {
+                "resName": {
+                    "type": "string",
+                    "multiline": true,
+                    "helperText": "Офіційна (повна) назва ІР ",
+                    "checkRequired": "() => true"
+                },
+                "status": {
+                    "type": "string",
+                    "control": "radio.group",
+                    "description": "Статус",
+                    "checkRequired": "() => true",
+                    "items": {
+                        "gg": {
+                            "id": "Так",
+                            "title": "Так"
+                        }
+                    }
+                },
+                "resShortName": {
+                    "type": "string",
+                    "helperText": "Скорочена назва ІР",
+                    "changeCase": "toUpperCase",
+                    "checkRequired": "() => true"
+                },
+                "acts": {
+                    "type": "object",
+                    "description": "Нормативно-правові акти, якими регламентовано створення та функціонування ІР",
+                    "control": "form.group",
+                    "blockDisplay": true,
+                    "checkRequired": "() => true",
+                    "properties": {
+                        "law": {
+                            "type": "string",
+                            "multiline": true,
+                            "helperText": "Закон:",
+                            "checkRequired": "(_, step) => !(!!step.acts.resolution || !!step.acts.order || !!step.acts.other)"
+                        },
+                        "resolution": {
+                            "type": "string",
+                            "multiline": true,
+                            "helperText": "Постанова:",
+                            "checkRequired": "(_, step) => !(!!step.acts.law || !!step.acts.order || !!step.acts.other)"
+                        },
+                        "order": {
+                            "type": "string",
+                            "multiline": true,
+                            "helperText": "Наказ:",
+                            "checkRequired": "(_, step) => !(!!step.acts.resolution || !!step.acts.law || !!step.acts.other)"
+                        },
+                        "other": {
+                            "type": "string",
+                            "multiline": true,
+                            "helperText": "Інше (зазначити):",
+                            "checkRequired": "(_, step) => !(!!step.acts.resolution || !!step.acts.order || !!step.acts.law)"
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "funcInfo": {
+            "type": "object",
+            "description": "Відомості про форму функціонування ІР",
+            "checkRequired": "() => true",
+            "properties": {
+                "funcForm": {
+                    "type": "object",
+                    "description": "Відомості про форму функціонування ІР (можливо обрати одне значення)",
+                    "control": "register",
+                    "keyId": "48",
+                    "multiple": false,
+                    "checkRequired": "() => true"
+                },
+                "subjectStatusInfo": {
+                    "type": "array",
+                    "checkRequired": "() => true",
+                    "sample": "Примітка: визначити всі юридичні особи і зазначити їх статус",
+                    "description": "повноваження ІР",
+                    "items": {
+                        "type": "object",
+                        "description": "Власник/Держатель/Володілець",
+                        "control": "form.group",
+                        "blockDisplay": true,
+                        "checkRequired": "() => true",
+                        "properties": {
+                            "edrpou": {
+                                "type": "string",
+                                "description": "Код ЄДРПОУ, найменування юридичної особи",
+                                "checkRequired": "() => true"
+                            },
+                            "status": {
+                                "type": "string",
+                                "control": "radio.group",
+                                "description": "Статус",
+                                "checkRequired": "() => true",
+                                "item": [
+                                    {
+                                        "id": "Власник",
+                                        "title": "Власник"
+                                    },
+                                    {
+                                        "id": "Держатель",
+                                        "title": "Держатель"
+                                    },
+                                    {
+                                        "id": "Володілець",
+                                        "title": "Володілець"
+                                    }
+                                ]
+                            },
+                            "acts": {
+                                "type": "object",
+                                "description": "Нормативно-правові акти, на підставі яких учасника визначено власником/держателем/володільцем ІР (вказати дату прийняття та реєстраційний номер документа, посилання на документ в мережі інтернет, або докласти копію документа)",
+                                "control": "form.group",
+                                "blockDisplay": true,
+                                "checkRequired": "() => true",
+                                "properties": {
+                                    "law": {
+                                        "type": "string",
+                                        "description": "Закон:",
+                                        "multiline": true,
+                                        "checkRequired": "(propertyData, step, documentDataObject, parentData, index) => { console.log('propertyData is : ', propertyData); console.log('step is : ', step); console.log('documentDataObject is : ', documentDataObject); console.log('parentData is : ', parentData); console.log('Index is : ', index); return !(!!step.subjectStatusInfo[0].acts.resolution || !!step.subjectStatusInfo[0].acts.order || !!step.subjectStatusInfo[0].acts.other)}"
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "multiline": true,
+                                        "description": "Постанова:",
+                                        "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectStatusInfo[0].acts.law || !!step.subjectStatusInfo[0].acts.order || !!step.subjectStatusInfo[0].acts.other)"
+                                    },
+                                    "order": {
+                                        "type": "string",
+                                        "description": "Наказ:",
+                                        "multiline": true,
+                                        "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectStatusInfo[0].acts.resolution || !!step.subjectStatusInfo[0].acts.law || !!step.subjectStatusInfo[0].acts.other)"
+                                    },
+                                    "other": {
+                                        "type": "string",
+                                        "multiline": true,
+                                        "description": "Інше (зазначити):",
+                                        "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectStatusInfo[0].acts.resolution || !!step.subjectStatusInfo[0].acts.order || !!step.subjectStatusInfo[0].acts.law)"
+                                    },
+                                    "link": {
+                                        "type": "string",
+                                        "description": "Посилання на документ"
+                                    },
+                                    "file": {
+                                        "type": "array",
+                                        "control": "select.files",
+                                        "description": "Копія документа"
+                                    }
+                                }
+                            },
+                            "managerOrAdmin": {
+                                "type": "object",
+                                "description": "Розпорядник/Адміністратор",
+                                "control": "form.group",
+                                "checkRequired": "() => true",
+                                "blockDisplay": true,
+                                "properties": {
+                                    "edrpou": {
+                                        "type": "string",
+                                        "description": "Код ЄДРПОУ, найменування юридичної особи",
+                                        "checkRequired": "() => true"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "control": "radio.group",
+                                        "checkRequired": "() => true",
+                                        "description": "Статус",
+                                        "items": [
+                                            {
+                                                "id": "Розпорядник",
+                                                "title": "Розпорядник"
+                                            },
+                                            {
+                                                "id": "Адміністратор",
+                                                "title": "Адміністратор"
+                                            }
+                                        ]
+                                    },
+                                    "acts": {
+                                        "type": "object",
+                                        "description": "Нормативно-правові акти, на підставі яких учасника визначено розпорядником/адміністратором ІР (вказати дату прийняття та реєстраційний номер документа, посилання на документ в мережі інтернет, або докласти копію документа)",
+                                        "control": "form.group",
+                                        "checkRequired": "() => true",
+                                        "blockDisplay": true,
+                                        "properties": {
+                                            "law": {
+                                                "type": "string",
+                                                "description": "Закон:",
+                                                "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectStatusInfo[0].managerOrAdmin.acts.resolution || !!step.subjectStatusInfo[0].managerOrAdmin.acts.order || !!step.subjectStatusInfo[0].managerOrAdmin.acts.other)"
+                                            },
+                                            "resolution": {
+                                                "type": "string",
+                                                "description": "Постанова:",
+                                                "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectStatusInfo[0].managerOrAdmin.acts.law || !!step.subjectStatusInfo[0].managerOrAdmin.acts.order || !!step.subjectStatusInfo[0].managerOrAdmin.acts.other)"
+                                            },
+                                            "order": {
+                                                "type": "string",
+                                                "description": "Наказ:",
+                                                "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectStatusInfo[0].managerOrAdmin.acts.resolution || !!step.subjectStatusInfo[0].managerOrAdmin.acts.law || !!step.subjectStatusInfo[0].managerOrAdmin.acts.other)"
+                                            },
+                                            "other": {
+                                                "type": "string",
+                                                "description": "Інше (зазначити):",
+                                                "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectStatusInfo[0].managerOrAdmin.acts.resolution || !!step.subjectStatusInfo[0].managerOrAdmin.acts.order || !!step.subjectStatusInfo[0].managerOrAdmin.acts.law)"
+                                            },
+                                            "link": {
+                                                "type": "string",
+                                                "description": "Посилання на документ"
+                                            },
+                                            "file": {
+                                                "type": "array",
+                                                "control": "select.files",
+                                                "description": "Копія документа"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "informationInfo": {
+            "type": "object",
+            "description": "Відомості про дані ІР (ІНФОРМАЦІЮ)",
+            "checkRequired": "() => true",
+            "properties": {
+                "subjectInfo": {
+                    "type": "array",
+                    "sample": "Примітка: визначити всі юридичні особи і зазначити їх статус",
+                    "checkRequired": "() => true",
+                    "description": "Відомості про уповноважених суб’єктів та їх повноваження щодо ІНФОРМАЦІЇ",
+                    "items": {
+                        "type": "object",
+                        "description": "Власник/Держатель/Володілець",
+                        "control": "form.group",
+                        "blockDisplay": true,
+                        "checkRequired": "() => true",
+                        "properties": {
+                            "edrpou": {
+                                "type": "string",
+                                "description": "Код ЄДРПОУ, найменування юридичної особи",
+                                "checkRequired": "() => true"
+                            },
+                            "status": {
+                                "type": "string",
+                                "control": "radio.group",
+                                "description": "Статус",
+                                "checkRequired": "() => true",
+                                "items": [
+                                    {
+                                        "id": "Власник",
+                                        "title": "Власник"
+                                    },
+                                    {
+                                        "id": "Держатель",
+                                        "title": "Держатель"
+                                    },
+                                    {
+                                        "id": "Володілець",
+                                        "title": "Володілець"
+                                    }
+                                ]
+                            },
+                            "acts": {
+                                "type": "object",
+                                "description": "Нормативно-правові акти, на підставі яких учасника визначено власником/держателем/володільцем Інформації (вказати дату прийняття та реєстраційний номер документа, посилання на документ в мережі інтернет, або докласти копію документа)",
+                                "control": "form.group",
+                                "blockDisplay": true,
+                                "checkRequired": "() => true",
+                                "properties": {
+                                    "law": {
+                                        "type": "string",
+                                        "description": "Закон:",
+                                        "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectInfo[0].acts.resolution || !!step.subjectInfo[0].acts.order || !!step.subjectInfo[0].acts.other)"
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "description": "Постанова:",
+                                        "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectInfo[0].acts.law || !!step.subjectInfo[0].acts.order || !!step.subjectInfo[0].acts.other)"
+                                    },
+                                    "order": {
+                                        "type": "string",
+                                        "description": "Наказ:",
+                                        "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectInfo[0].acts.resolution || !!step.subjectInfo[0].acts.law || !!step.subjectInfo[0].acts.other)"
+                                    },
+                                    "other": {
+                                        "type": "string",
+                                        "description": "Інше (зазначити):",
+                                        "checkRequired": "(_1, step, _3, _4, index) => !(!!step.subjectInfo[0].acts.resolution || !!step.subjectInfo[0].acts.order || !!step.subjectInfo[0].acts.law)"
+                                    },
+                                    "link": {
+                                        "type": "string",
+                                        "description": "Посилання на документ"
+                                    },
+                                    "file": {
+                                        "type": "array",
+                                        "control": "select.files",
+                                        "description": "Копія документа"
+                                    }
+                                }
+                            },
+                            "managerOrAdmin": {
+                                "type": "object",
+                                "description": "Розпорядник/Адміністратор",
+                                "control": "form.group",
+                                "blockDisplay": true,
+                                "properties": {
+                                    "edrpou": {
+                                        "type": "string",
+                                        "description": "Код ЄДРПОУ, найменування юридичної особи"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "control": "radio.group",
+                                        "description": "Статус",
+                                        "items": [
+                                            {
+                                                "id": "Розпорядник",
+                                                "title": "Розпорядник"
+                                            },
+                                            {
+                                                "id": "Адміністратор",
+                                                "title": "Адміністратор"
+                                            }
+                                        ]
+                                    },
+                                    "acts": {
+                                        "type": "object",
+                                        "description": "Нормативно-правові акти, на підставі яких учасника визначено розпорядником/адміністратором Інформації в інформаційному ресурсі (вказати дату прийняття та реєстраційний номер документа, посилання на документ в мережі інтернет, або докласти копію документа)",
+                                        "control": "form.group",
+                                        "blockDisplay": true,
+                                        "properties": {
+                                            "law": {
+                                                "type": "string",
+                                                "description": "Закон:"
+                                            },
+                                            "resolution": {
+                                                "type": "string",
+                                                "description": "Постанова:"
+                                            },
+                                            "order": {
+                                                "type": "string",
+                                                "description": "Наказ:"
+                                            },
+                                            "other": {
+                                                "type": "string",
+                                                "description": "Інше (зазначити):"
+                                            },
+                                            "link": {
+                                                "type": "string",
+                                                "description": "Посилання на документ"
+                                            },
+                                            "file": {
+                                                "type": "array",
+                                                "control": "select.files",
+                                                "description": "Копія документа"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "addsubjectInfo": {
+            "type": "object",
+            "description": "Суб’єкти інформаційних відносин",
+            "properties": {
+                "subjects": {
+                    "type": "array",
+                    "checkRequired": "() => true",
+                    "description": "Суб’єкти інформаційних відносин відносно інформації в ресурсі відповідно до ст. 5 ЗУ «Про інформацію»",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "subjectName": {
+                                "type": "string",
+                                "control": "radio.group",
+                                "sample": "Примітка: потрібне обрати",
+                                "multiple": false,
+                                "checkRequired": "() => true",
+                                "rowDirection": false,
+                                "description": "Назва суб’єкта інформаційних відносин",
+                                "items": [
+                                    {
+                                        "id": "individual",
+                                        "title": "Фізична особа"
+                                    },
+                                    {
+                                        "id": "organization",
+                                        "title": "Юридична особа"
+                                    },
+                                    {
+                                        "id": "association",
+                                        "title": "Об'єднання громадян"
+                                    },
+                                    {
+                                        "id": "power",
+                                        "title": "Суб'єкти владних повноважень"
+                                    },
+                                    {
+                                        "id": "other",
+                                        "title": "Інші (вказати)"
+                                    }
+                                ]
+                            },
+                            "input": {
+                                "type": "string",
+                                "description": "Інші (вказати)",
+                                "checkRequired": "(_1, step, _3, _4, index) => { if (step.subjects) return step.subjects[0].subjectName === 'other'; else return false; }",
+                                "checkHidden": "(_1, step, _3, _4, index) => { if (step.subjects) return !(step.subjects[0].subjectName === 'other'); else return true; }"
+                            },
+                            "factNumber": {
+                                "type": "string",
+                                "description": "Фактична кількість",
+                                "checkRequired": "() => true"
+                            }
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "additionalInfo": {
+            "type": "object",
+            "description": "Додаткові відомості",
+            "properties": {
+                "langTitle": {
+                    "control": "text.block",
+                    "htmlBlock": "<p> Мова, що використовується в процесах створення та обробки інформації в інформаційному ресурсі відповідно до ст. 8 ЗУ «Про інформацію»</p>"
+                },
+                "lang": {
+                    "type": "array",
+                    "control": "register",
+                    "description": "fsfs",
+                    "keyId": 63,
+                    "multiple": true,
+                    "sortBy": {
+                        "data.codePriority": "desc"
+                    },
+                    "sample": "Примітка: потрібне обрати, множинний вибір"
+                },
+                "infoTypesTitle": {
+                    "control": "text.block",
+                    "htmlBlock": "<p> Види інформації за змістом в інформаційному ресурсі відповідно до ст. 10 ЗУ «Про інформацію»</p>"
+                },
+                "infoTypes": {
+                    "type": "array",
+                    "control": "register",
+                    "description": "fsfs",
+                    "keyId": 55,
+                    "multiple": true,
+                    "sample": "Примітка: потрібне обрати, множинний вибір"
+                },
+                "other": {
+                    "type": "string",
+                    "description": "Інші (зазначити)",
+                    "checkRequired": "(_1, s) => {if ('infoTypes' in s) return !!s.infoTypes.find(e => e.id === 'fb317a70-2e4f-11eb-b306-4933de2bda7e'); else return false}",
+                    "checkHidden": "(_1, s) => {if ('infoTypes' in s) return !s.infoTypes.find(e => e.id === 'fb317a70-2e4f-11eb-b306-4933de2bda7e'); else return true}",
+                    "hidden": true
+                }
+            },
+            "required": []
+        },
+        "resUsers": {
+            "type": "object",
+            "description": "Користувачі ресурсу поза Центральною підсистемою ЄІС МВС",
+            "properties": {
+                "subjects": {
+                    "type": "array",
+                    "description": "Заповнюється для кожного суб'єкта-користувача",
+                    "checkRequired": "() => true",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "edrpou": {
+                                "type": "string",
+                                "description": "Код згідно з ЄДРПОУ",
+                                "checkRequired": "() => true",
+                                "mask": "99999999"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Найменування юридичної особи -отримувача інформації з ресурсу",
+                                "checkRequired": "() => true"
+                            },
+                            "networkTitle": {
+                                "control": "text.block",
+                                "htmlBlock": "<h3> Телекомунікаційна мережа, через яку відбувається підключення для визначеного типу користувача</h3>"
+                            },
+                            "network": {
+                                "type": "array",
+                                "control": "register.select",
+                                "keyId": "56",
+                                "multiple": true,
+                                "sample": "Примітка: потрібне обрати"
+                            },
+                            "accessTitle": {
+                                "control": "text.block",
+                                "htmlBlock": "<h3> Порядок доступу для визначеного типу користувача</h3>"
+                            },
+                            "access": {
+                                "type": "string",
+                                "control": "radio.group",
+                                "checkRequired": "() => true",
+                                "multiple": false,
+                                "sample": "Примітка: потрібне обрати, одиничний вибір ",
+                                "items": [
+                                    {
+                                        "id": "opened",
+                                        "title": "відкритий"
+                                    },
+                                    {
+                                        "id": "kszi",
+                                        "title": "захищений із використанням засобів КЗІ"
+                                    }
+                                ]
+                            },
+                            "interfaceTitle": {
+                                "control": "text.block",
+                                "htmlBlock": "<h3> Інтерфейс взаємодії для визначеного типу користувача</h3>"
+                            },
+                            "interface": {
+                                "type": "array",
+                                "control": "register",
+                                "keyId": "42",
+                                "multiple": true,
+                                "sample": "Примітка: множинний вибір",
+                                "sortBy": {
+                                    "data.codePriority": "asc"
+                                }
+                            },
+                            "otherInterface": {
+                                "type": "string",
+                                "description": "Інші (зазначити)",
+                                "checkRequired": "(_1, s) => {if ('interface' in s.subjects[0]) return !!s.subjects[0].interface.find(e => e.id === '2a493790-0276-11eb-b66d-ff59f05e23c3'); else return false}",
+                                "checkHidden": "(_1, s) => {if ('interface' in s.subjects[0]) return !s.subjects[0].interface.find(e => e.id === '2a493790-0276-11eb-b66d-ff59f05e23c3'); else return true}",
+                                "hidden": true
+                            },
+                            "infoOrgTitle": {
+                                "control": "text.block",
+                                "htmlBlock": "<h3> Порядок організації електронної інформаційної взаємодії для визначеного типу користувача</h3>"
+                            },
+                            "infoOrg": {
+                                "type": "array",
+                                "control": "register",
+                                "keyId": "57",
+                                "multiple": true,
+                                "sample": "Примітка: множинний вибір"
+                            },
+                            "contract": {
+                                "type": "boolean",
+                                "control": "toggle",
+                                "offText": "Ні",
+                                "onText": "Так",
+                                "description": "Наявність договору з суб’єктом відповідно до ЗУ “Про захист інформації в інформаційно-телекомунікаційних системах»",
+                                "defaultValue": true,
+                                "checkRequired": "() => true"
+                            },
+                            "file": {
+                                "type": "array",
+                                "control": "select.files",
+                                "description": "Копія договору",
+                                "sample": "Примітка: завантажити копію договору",
+                                "checkHidden": "(_1, step, _3, _4, index) => !step.subjects[0].contract",
+                                "hidden": true
+                            },
+                            "contractNumber": {
+                                "type": "string",
+                                "description": "Номер договору:",
+                                "checkRequired": "(_1, step, _3, _4, index) => !!step.subjects[0].contract",
+                                "checkHidden": "(_1, step, _3, _4, index) => !step.subjects[0].contract",
+                                "hidden": true
+                            },
+                            "contractDate": {
+                                "type": "string",
+                                "control": "date",
+                                "description": "Дата договору:",
+                                "checkRequired": "(_1, step, _3, _4, index) => !!step.subjects[0].contract",
+                                "checkHidden": "(_1, step, _3, _4, index) => !step.subjects[0].contract",
+                                "hidden": true
+                            },
+                            "kszi": {
+                                "type": "boolean",
+                                "control": "toggle",
+                                "offText": "Ні",
+                                "onText": "Так",
+                                "description": "Наявність КСЗІ в системі отримувача або акта ОТР КСЗІ користувача",
+                                "defaultValue": false,
+                                "checkRequired": "() => true"
+                            },
+                            "file2": {
+                                "type": "array",
+                                "control": "select.files",
+                                "description": "Копія договору",
+                                "sample": "Примітка: завантажити копію договору",
+                                "checkHidden": "(_1, step, _3, _4, index) => !step.subjects[0].kszi",
+                                "hidden": true
+                            },
+                            "contractNumber2": {
+                                "type": "string",
+                                "description": "Номер договору:",
+                                "checkRequired": "(_1, step, _3, _4, index) => !!step.subjects[0].kszi",
+                                "checkHidden": "(_1, step, _3, _4, index) => !step.subjects[0].kszi",
+                                "hidden": true
+                            },
+                            "contractDate2": {
+                                "type": "string",
+                                "control": "date",
+                                "description": "Дата договору:",
+                                "checkRequired": "(_1, step, _3, _4, index) => !!step.subjects[0].kszi",
+                                "checkHidden": "(_1, step, _3, _4, index) => !step.subjects[0].kszi",
+                                "hidden": true
+                            },
+                            "otherTitle": {
+                                "control": "text.block",
+                                "htmlBlock": "<p> Інші відомості про суб’єкта, який використовує інформаційний ресурс</p>"
+                            },
+                            "other": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "resInfrastructure": {
+            "type": "object",
+            "description": "Інфраструктура функціонування інформаційного ресурсу",
+            "properties": {
+                "variants": {
+                    "type": "array",
+                    "description": "Варіанти реалізації інфраструктури",
+                    "checkRequired": "() => true",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "infrastructureType": {
+                                "type": "object",
+                                "description": "Тип інфраструктури",
+                                "control": "register",
+                                "keyId": "58",
+                                "multiple": false
+                            },
+                            "name": {
+                                "type": "string",
+                                "checkRequired": "() => true",
+                                "description": "Назва серверного обладнання та програми гіпервізора",
+                                "sample": "Примітка: VMware Vsphere,  Nutanix AHV, Microsoft HyperV, KVM, інше"
+                            }
+                        }
+                    }
+                },
+                "cloud": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "description": "Хмарне середовище",
+                    "defaultValue": false,
+                    "checkRequired": "() => true",
+                    "sample": "Примітка: зазначається у разі споживання хмарних послуг від їх провайдерів "
+                },
+                "cloudprovider": {
+                    "type": "object",
+                    "description": "Провайдер хмарних послуг",
+                    "checkRequired": "(_1, step) => step.cloud",
+                    "checkHidden": "(_1, step) => !step.cloud",
+                    "hidden": true,
+                    "control": "form.group",
+                    "blockDisplay": true,
+                    "sample": "Примітка: зазначається повне найменування провайдера хмарних послуг та юрисдикція, в якій здійснює діяльність суб’єкт господарювання",
+                    "properties": {
+                        "orgName": {
+                            "type": "string",
+                            "description": "Найменування організації провайдера",
+                            "checkRequired": "(_1, step) => step.cloud"
+                        },
+                        "jurisdiction": {
+                            "type": "string",
+                            "checkRequired": "(_1, step) => step.cloud",
+                            "description": "Юрисдикція, в якій здійснює діяльність суб’єкт господарювання"
+                        },
+                        "virtualInfrastructure": {
+                            "type": "string",
+                            "checkRequired": "(_1, step) => step.cloud",
+                            "description": "Віртуальна інфраструктура (провайдера хмарних послуг)",
+                            "sample": "Примітка: зазначається назва серверного обладнання та програми гіпервізора: VMware, Nutanix, HyperV, KVM інше"
+                        }
+                    }
+                },
+                "virtualization": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "() => true",
+                    "description": "Наявність вкладеної віртуалізації",
+                    "defaultValue": false
+                },
+                "otherInfo": {
+                    "type": "string",
+                    "description": "Інші відомості про інфраструктуру функціонування інформаційного ресурсу"
+                },
+                "infrDescription": {
+                    "type": "array",
+                    "description": "Опис інфраструктури функціонування інформаційного ресурсу",
+                    "checkRequired": "() => true",
+                    "sample": "Примітка: Заповнюється окремо для кожного місцезнаходження ",
+                    "items": {
+                        "type": "object",
+                        "description": "Місцезнаходження інфраструктури функціонування інформаційного ресурсу",
+                        "properties": {
+                            "assignment": {
+                                "type": "string",
+                                "control": "radio.group",
+                                "description": "Призначення",
+                                "rowDirection": false,
+                                "checkRequired": "() => true",
+                                "items": [
+                                    {
+                                        "id": "dc_main",
+                                        "title": "центральний сервер обробки даних (ЦСОД)"
+                                    },
+                                    {
+                                        "id": "dc_hot",
+                                        "title": "резервний сервер обробки даних (РСОД)"
+                                    },
+                                    {
+                                        "id": "dc_cold",
+                                        "title": "другий резервний"
+                                    }
+                                ]
+                            },
+                            "country": {
+                                "type": "string",
+                                "checkRequired": "() => true",
+                                "description": "Країна:"
+                            },
+                            "postIndex": {
+                                "type": "string",
+                                "checkRequired": "() => true",
+                                "description": "Поштовий індекс:"
+                            },
+                            "city": {
+                                "type": "string",
+                                "checkRequired": "() => true",
+                                "description": "Місто:"
+                            },
+                            "street": {
+                                "type": "string",
+                                "checkRequired": "() => true",
+                                "description": "Вулиця:"
+                            },
+                            "house": {
+                                "type": "string",
+                                "checkRequired": "() => true",
+                                "description": "Будинок:"
+                            }
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "secureInfo": {
+            "type": "object",
+            "description": "Відомості про комплексну систему захисту інформації ",
+            "properties": {
+                "category": {
+                    "type": "object",
+                    "description": "Категорія інформації, яка обробляється в інформаційному ресурсі",
+                    "control": "register",
+                    "keyId": "59",
+                    "multiple": false,
+                    "sample": "Примітка: потрібне обрати, одиничний вибір"
+                },
+                "atestat": {
+                    "type": "object",
+                    "control": "form.group",
+                    "blockDisplay": true,
+                    "description": "fsfs",
+                    "checkRequired": "() => true",
+                    "properties": {
+                        "isAtestat": {
+                            "type": "boolean",
+                            "control": "toggle",
+                            "offText": "Ні",
+                            "onText": "Так",
+                            "checkRequired": "() => true",
+                            "description": "Відомості про Атестат відповідності комплексної системи захисту інформації (КСЗІ) інформаційно-телекомунікаційної системи (ІТС)",
+                            "defaultValue": true
+                        },
+                        "regNumber": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.atestat.isAtestat",
+                            "description": "Реєстраційний номер:"
+                        },
+                        "regDate": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.atestat.isAtestat",
+                            "description": "Дата реєстрації:"
+                        },
+                        "endDate": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.atestat.isAtestat",
+                            "description": "Термін дії:"
+                        },
+                        "dsk": {
+                            "type": "boolean",
+                            "control": "toggle",
+                            "offText": "Ні",
+                            "onText": "Так",
+                            "checkRequired": "() => true",
+                            "description": "Присвоєно ДСК",
+                            "defaultValue": false
+                        },
+                        "doc": {
+                            "type": "array",
+                            "control": "select.files",
+                            "checkRequired": "(_, step) => !!step.atestat.isAtestat",
+                            "checkHidden": "(_, step) => !!step.atestat.dsk",
+                            "hidden": true,
+                            "description": "Відсканований документ"
+                        },
+                        "message": {
+                            "control": "text.block",
+                            "htmlBlock": "<h3>документ надіслати поштою</h3>",
+                            "checkHidden": "(_, step) => !step.atestat.dsk",
+                            "hidden": true
+                        }
+                    }
+                },
+                "expertConnect": {
+                    "type": "object",
+                    "control": "form.group",
+                    "description": "fsfs",
+                    "blockDisplay": true,
+                    "checkRequired": "() => true",
+                    "properties": {
+                        "isExp": {
+                            "type": "boolean",
+                            "control": "toggle",
+                            "offText": "Ні",
+                            "onText": "Так",
+                            "checkRequired": "() => true",
+                            "sample": "Примітка: Обов’язкове для заповнення. Надіслати додатком копію експертного висновку. У разі відсутності зазначається «Відсутній».",
+                            "description": "Відомості про експертний висновок КСЗІ в ІТС, що підключається",
+                            "defaultValue": true
+                        },
+                        "regNumber": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.expertConnect.isExp",
+                            "description": "Реєстраційний номер:"
+                        },
+                        "regDate": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.expertConnect.isExp",
+                            "description": "Дата реєстрації:"
+                        },
+                        "endDate": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.expertConnect.isExp",
+                            "description": "Термін дії:"
+                        },
+                        "dsk": {
+                            "type": "boolean",
+                            "control": "toggle",
+                            "offText": "Ні",
+                            "onText": "Так",
+                            "checkRequired": "() => true",
+                            "description": "Присвоєно ДСК",
+                            "defaultValue": false
+                        },
+                        "doc": {
+                            "type": "array",
+                            "control": "select.files",
+                            "checkRequired": "(_, step) => !!step.expertConnect.isExp",
+                            "checkHidden": "(_, step) => !!step.expertConnect.dsk",
+                            "hidden": true,
+                            "description": "Відсканований документ"
+                        },
+                        "message": {
+                            "control": "text.block",
+                            "htmlBlock": "<h3>документ надіслати поштою</h3>",
+                            "checkHidden": "(_, step) => !step.expertConnect.dsk",
+                            "hidden": true
+                        }
+                    }
+                },
+                "expertOrgTech": {
+                    "type": "object",
+                    "control": "form.group",
+                    "description": "fsfs",
+                    "blockDisplay": true,
+                    "checkRequired": "() => true",
+                    "properties": {
+                        "isExp": {
+                            "type": "boolean",
+                            "control": "toggle",
+                            "offText": "Ні",
+                            "onText": "Так",
+                            "checkRequired": "() => true",
+                            "sample": "Примітка: За наявності. Надіслати додатком копію експертного висновку. У разі відмови заповнення, вказати причини відмови. У разі відсутності зазначається «Відсутній».",
+                            "description": "Відомості про наявність експертного висновку на організаційно-технічне рішення для КСЗІ ІТС",
+                            "defaultValue": true
+                        },
+                        "regNumber": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.expertOrgTech.isExp",
+                            "description": "Реєстраційний номер:"
+                        },
+                        "regDate": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.expertOrgTech.isExp",
+                            "description": "Дата реєстрації:"
+                        },
+                        "endDate": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.expertOrgTech.isExp",
+                            "description": "Термін дії:"
+                        },
+                        "dsk": {
+                            "type": "boolean",
+                            "control": "toggle",
+                            "offText": "Ні",
+                            "onText": "Так",
+                            "checkRequired": "() => true",
+                            "description": "Присвоєно ДСК",
+                            "defaultValue": false
+                        },
+                        "doc": {
+                            "type": "array",
+                            "control": "select.files",
+                            "checkRequired": "(_, step) => !!step.expertOrgTech.isExp",
+                            "checkHidden": "(_, step) => !!step.expertOrgTech.dsk",
+                            "hidden": true,
+                            "description": "Відсканований документ"
+                        },
+                        "message": {
+                            "control": "text.block",
+                            "htmlBlock": "<h3>документ надіслати поштою</h3>",
+                            "checkHidden": "(_, step) => !step.expertOrgTech.dsk",
+                            "hidden": true
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "encryptInfo": {
+            "type": "object",
+            "description": "Відомості про криптографічний захист інформації",
+            "properties": {
+                "kziTypes": {
+                    "type": "array",
+                    "description": "Типи засобів криптографічного захисту інформації (КЗІ), що використовуються для інформаційного обміну",
+                    "control": "register",
+                    "keyId": "60",
+                    "multiple": true,
+                    "sample": "Примітка: потрібне обрати, множинний вибір"
+                },
+                "kziServer": {
+                    "type": "string",
+                    "description": "Засоби КЗІ, що використовуються для захисту мережевих з’єднань (мережевого ІР-потоку) на рівні обміну інформацією між серверами",
+                    "checkRequired": "() => true",
+                    "sample": "Примітка: зазначити засоби КЗІ та їх назви, що використовуються для захисту периметра і можуть бути використані для міжсистемного підключення та обміну інформацією"
+                },
+                "kziClient": {
+                    "type": "string",
+                    "description": "Засоби КЗІ, що використовуються для захисту мережевих з’єднань клієнтських підключень (за наявності)",
+                    "checkRequired": "() => true",
+                    "sample": "Примітка: зазначити засоби КЗІ та їх назви, що використовуються для захисту з’єднань з кінцевими споживачами ресурсу"
+                },
+                "kziAuth": {
+                    "type": "string",
+                    "description": "Засоби КЗІ, що використовуються для авторизації користувачів ресурсу (з використанням КЕП)",
+                    "checkRequired": "() => true",
+                    "sample": "Примітка: зазначити засоби КЗІ та їх назви, що здійснюють авторизацію споживачів ресурсу (за наявності)"
+                },
+                "kziWeb": {
+                    "type": "string",
+                    "description": "Засоби КЗІ, що використовуються для захисту клієнтських підключень по WEB-інтерфейсу (за наявності)",
+                    "checkRequired": "() => true",
+                    "sample": "Примітка: зазначити засоби КЗІ та їх назви, що окремо здійснюють захист інформації WEB-інтерфейсу користувачів"
+                },
+                "knedp": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "() => true",
+                    "description": "Інформація щодо наявності відомчого (власного) КНЕДП, що використовується для генерації криптографічних ключів користувачів (за наявності)",
+                    "defaultValue": false
+                },
+                "knedpname": {
+                    "type": "string",
+                    "checkRequired": "(_, step) => !!step.knedp",
+                    "checkHidden": "(_, step) => !step.knedp",
+                    "hidden": true,
+                    "description": "Офіційна назва власного КНЕДП"
+                }
+            },
+            "required": []
+        },
+        "techInfo": {
+            "type": "object",
+            "description": "Відомості про технічне обслуговування ІР",
+            "properties": {
+                "belongTo": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "() => true",
+                    "description": "Належність до ФП ЄІС МВС",
+                    "defaultValue": false
+                },
+                "urPersons": {
+                    "type": "array",
+                    "checkHidden": "(_, step) => !step.belongTo",
+                    "hidden": true,
+                    "sample": "Примітка: зазначити перелік юридичних осіб, що здійснюють розроблення, супроводження, технічну підтримку ІР. ",
+                    "description": "Юридичні особи, що здійснюють технічне/програмне супроводження або технічну підтримку ІР/ІТС",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "edrpou": {
+                                "type": "string",
+                                "description": "Назва, код ЄДРПОУ",
+                                "checkHidden": "(_, step) => !step.belongTo",
+                                "hidden": true
+                            },
+                            "belonging": {
+                                "type": "string",
+                                "control": "radio.group",
+                                "description": "Належність",
+                                "checkHidden": "(_, step) => !step.belongTo",
+                                "hidden": true,
+                                "items": [
+                                    {
+                                        "id": "відомчий орган",
+                                        "title": "відомчий орган"
+                                    },
+                                    {
+                                        "id": "підрядна організація",
+                                        "title": "підрядна організація"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "npaInfo": {
+                    "type": "object",
+                    "control": "form.group",
+                    "blockDisplay": true,
+                    "checkRequired": "() => true",
+                    "description": "Відомості про НПА або розпорядчий документ, яким затверджено структури баз даних ІР",
+                    "properties": {
+                        "isNpa": {
+                            "type": "boolean",
+                            "control": "toggle",
+                            "offText": "Ні",
+                            "onText": "Так",
+                            "checkRequired": "() => true",
+                            "description": "Наявність НПА або розпорядчого документа",
+                            "defaultValue": false
+                        },
+                        "docNumber": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.npaInfo.isNpa",
+                            "checkHidden": "(_, step) => !step.npaInfo.isNpa",
+                            "hidden": true,
+                            "description": "Номер документа"
+                        },
+                        "docDate": {
+                            "type": "string",
+                            "control": "date",
+                            "checkRequired": "(_, step) => !!step.npaInfo.isNpa",
+                            "checkHidden": "(_, step) => !step.npaInfo.isNpa",
+                            "hidden": true,
+                            "description": "Дата документа"
+                        },
+                        "doc": {
+                            "type": "object",
+                            "control": "form.group",
+                            "blockDisplay": true,
+                            "checkHidden": "(_, step) => !step.npaInfo.isNpa",
+                            "hidden": true,
+                            "properties": {
+                                "docView": {
+                                    "type": "boolean",
+                                    "control": "toggle",
+                                    "offText": "файл",
+                                    "onText": "Посилання",
+                                    "checkRequired": "(_, step) => !!step.npaInfo.isNpa",
+                                    "description": "Документ у вигляді",
+                                    "defaultValue": false
+                                },
+                                "docURL": {
+                                    "type": "string",
+                                    "checkRequired": "(_, step) => !!step.npaInfo.doc.docView",
+                                    "checkHidden": "(_, step) => !step.npaInfo.doc.docView",
+                                    "hidden": true,
+                                    "description": "Посилання на документ"
+                                },
+                                "file": {
+                                    "type": "array",
+                                    "control": "select.files",
+                                    "checkHidden": "(_, step) => !!step.npaInfo.doc.docView",
+                                    "hidden": true,
+                                    "description": "Відсканований документ"
+                                }
+                            }
+                        },
+                        "additionalInfo": {
+                            "type": "string",
+                            "checkHidden": "(_, step) => !step.npaInfo.isNpa",
+                            "hidden": true,
+                            "description": "Додаткові відомості про ІР"
+                        }
+                    }
+                }
+            },
+            "required": []
+        },
+        "testInfo": {
+            "type": "object",
+            "description": "Відомості про тестове середовище",
+            "properties": {
+                "isTestEnv": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "() => true",
+                    "description": "Наявність тестового середовища",
+                    "defaultValue": true
+                },
+                "equipLocation": {
+                    "type": "object",
+                    "sample": "Примітка: копіювати дані з ЄДР https://usr.minjust.gov.ua/content/",
+                    "description": "Місцезнаходження обладнання тестового середовища",
+                    "control": "form.group",
+                    "checkRequired": "(_, step) => !!step.isTestEnv",
+                    "checkHidden": "(_, step) => !step.isTestEnv",
+                    "hidden": true,
+                    "blockDisplay": true,
+                    "properties": {
+                        "country": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isTestEnv",
+                            "checkHidden": "(_, step) => !step.isTestEnv",
+                            "hidden": true,
+                            "description": "Країна:"
+                        },
+                        "postIndex": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isTestEnv",
+                            "checkHidden": "(_, step) => !step.isTestEnv",
+                            "hidden": true,
+                            "description": "Поштовий індекс:"
+                        },
+                        "city": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isTestEnv",
+                            "checkHidden": "(_, step) => !step.isTestEnv",
+                            "hidden": true,
+                            "description": "Місто:"
+                        },
+                        "street": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isTestEnv",
+                            "checkHidden": "(_, step) => !step.isTestEnv",
+                            "hidden": true,
+                            "description": "Вулиця:"
+                        },
+                        "house": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isTestEnv",
+                            "checkHidden": "(_, step) => !step.isTestEnv",
+                            "hidden": true,
+                            "description": "Будинок:"
+                        }
+                    }
+                },
+                "isTestData": {
+                    "type": "array",
+                    "control": "checkbox.group",
+                    "checkRequired": "(_, step) => !!step.isTestEnv",
+                    "checkHidden": "(_, step) => !step.isTestEnv",
+                    "hidden": true,
+                    "description": "Використання тестових даних в тестовому середовищі",
+                    "items": {
+                        "gg": {
+                            "id": "Так",
+                            "title": "Так"
+                        }
+                    }
+                },
+                "ip": {
+                    "type": "string",
+                    "checkRequired": "(_, step) => !!step.isTestEnv",
+                    "checkHidden": "(_, step) => !step.isTestEnv",
+                    "hidden": true,
+                    "description": "IP адреса та порт цільового ресурсу"
+                },
+                "additionalInfo": {
+                    "type": "string",
+                    "checkHidden": "(_, step) => !step.isTestEnv",
+                    "hidden": true,
+                    "description": "Додаткові відомості про тестове середовище"
+                }
+            },
+            "required": []
+        },
+        "industrialEnv": {
+            "type": "object",
+            "description": "Відомості про промислове середовище",
+            "properties": {
+                "isindustrialEnv": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "() => true",
+                    "description": "Наявність промислового середовища",
+                    "defaultValue": true
+                },
+                "equipLocation": {
+                    "type": "object",
+                    "sample": "Примітка: копіювати дані з ЄДР https://usr.minjust.gov.ua/content/",
+                    "description": "Місцезнаходження обладнання промислового середовища",
+                    "control": "form.group",
+                    "blockDisplay": true,
+                    "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                    "checkHidden": "(_, step) => !step.isindustrialEnv",
+                    "hidden": true,
+                    "properties": {
+                        "country": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                            "checkHidden": "(_, step) => !step.isindustrialEnv",
+                            "hidden": true,
+                            "description": "Країна:"
+                        },
+                        "postIndex": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                            "checkHidden": "(_, step) => !step.isindustrialEnv",
+                            "hidden": true,
+                            "description": "Поштовий індекс:"
+                        },
+                        "city": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                            "checkHidden": "(_, step) => !step.isindustrialEnv",
+                            "hidden": true,
+                            "description": "Місто:"
+                        },
+                        "street": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                            "checkHidden": "(_, step) => !step.isindustrialEnv",
+                            "hidden": true,
+                            "description": "Вулиця:"
+                        },
+                        "house": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                            "checkHidden": "(_, step) => !step.isindustrialEnv",
+                            "hidden": true,
+                            "description": "Будинок:"
+                        }
+                    }
+                },
+                "isTestData": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                    "checkHidden": "(_, step) => !step.isindustrialEnv",
+                    "hidden": true,
+                    "description": "Використання тестових даних в промисловому середовищі",
+                    "defaultValue": true
+                },
+                "ip": {
+                    "type": "string",
+                    "checkRequired": "(_, step) => !!step.isindustrialEnv",
+                    "checkHidden": "(_, step) => !step.isindustrialEnv",
+                    "hidden": true,
+                    "description": "IP адреса та порт цільового ресурсу"
+                },
+                "additionalInfo": {
+                    "type": "string",
+                    "checkHidden": "(_, step) => !step.isindustrialEnv",
+                    "hidden": true,
+                    "description": "Додаткові відомості про промислове середовище інформаційного ресурсу"
+                }
+            },
+            "required": []
+        },
+        "elInteraction": {
+            "type": "object",
+            "description": "Характеристика електронної інформаційної взаємодії",
+            "properties": {
+                "intWay": {
+                    "type": "object",
+                    "description": "Спосіб взаємодії",
+                    "control": "register",
+                    "keyId": "62",
+                    "multiple": false,
+                    "sortBy": {
+                        "data.codePriority": "asc"
+                    },
+                    "sample": "Примітка: потрібне обрати"
+                },
+                "protocol": {
+                    "type": "array",
+                    "description": "Передбачені протоколи взаємодії",
+                    "control": "register",
+                    "keyId": "43",
+                    "multiple": true,
+                    "sample": "Примітка: потрібне обрати (множинний вибір)"
+                },
+                "formats": {
+                    "type": "array",
+                    "description": "Формати (повідомлень) передачі інформації, визначені власником інформаційного ресурсу (інформації)",
+                    "control": "register",
+                    "keyId": "44",
+                    "multiple": true,
+                    "sample": "Примітка: потрібне обрати (множинний вибір)"
+                },
+                "isKep": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "() => true",
+                    "description": "Необхідність застосування кваліфікованого електронного підпису (КЕП) учасника при електронній інформаційній взаємодії (авторизація та накладання підпису на повідомлення)",
+                    "defaultValue": true
+                },
+                "isEp": {
+                    "type": "boolean",
+                    "control": "toggle",
+                    "offText": "Ні",
+                    "onText": "Так",
+                    "checkRequired": "() => true",
+                    "description": "Необхідність застосування кваліфікованої електронної печатки (ЕП) (авторизація та накладання печатки на повідомлення) при електронній інформаційній взаємодії",
+                    "defaultValue": true
+                },
+                "acts": {
+                    "type": "object",
+                    "description": "Нормативно-правові акти, якими регламентовано електронну інформаційну взаємодію ІР",
+                    "checkRequired": "() => true",
+                    "control": "form.group",
+                    "blockDisplay": true,
+                    "properties": {
+                        "law": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !(!!step.acts.resolution || !!step.acts.order || !!step.acts.regulation || !!step.acts.other)",
+                            "description": "Закон:"
+                        },
+                        "resolution": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !(!!step.acts.law || !!step.acts.order || !!step.acts.regulation || !!step.acts.other)",
+                            "description": "Постанова:"
+                        },
+                        "order": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !(!!step.acts.resolution || !!step.acts.law || !!step.acts.regulation || !!step.acts.other)",
+                            "description": "Наказ:"
+                        },
+                        "regulation": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !(!!step.acts.resolution || !!step.acts.order || !!step.acts.law || !!step.acts.other)",
+                            "description": "Регламент:"
+                        },
+                        "other": {
+                            "type": "string",
+                            "checkRequired": "(_, step) => !(!!step.acts.resolution || !!step.acts.order || !!step.acts.regulation || !!step.acts.law)",
+                            "description": "Інше (зазначити):"
+                        }
+                    }
+                },
+                "additionalinfo": {
+                    "type": "string",
+                    "description": "Додаткові відомості про механізми здійснення електронної інформаційної взаємодії ІР"
+                }
+            },
+            "required": []
+        }
+    }
+}

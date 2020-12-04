@@ -1,5 +1,15 @@
 {
-    "functions": ["test", "toggle", "stepOrders"],
+    "functions": [
+        "toggle",
+        "stepOrders",
+        "register",
+        "type",
+        "description",
+        "properties",
+        "items",
+        "control",
+        "keyId"
+    ],
     "rules": {
         "stepProps": {
             "description": "Step Required property",
@@ -13,6 +23,10 @@
                 },
                 {
                     "field": "description",
+                    "function": "truthy"
+                },
+                {
+                    "field": "properties",
                     "function": "truthy"
                 }
             ]
@@ -41,19 +55,21 @@
                 }
             ]
         },
-        "props": {
-            "description": "Required property",
-            "message": "Missing the {{property}}",
+        "type": {
             "given": "$.properties.*.properties.*",
             "severity": "error",
             "then": [
                 {
-                    "field": "type",
-                    "function": "truthy"
-                },
+                    "function": "type"
+                }
+            ]
+        },
+        "description": {
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": [
                 {
-                    "field": "description",
-                    "function": "truthy"
+                    "function": "description"
                 }
             ]
         },
@@ -64,11 +80,46 @@
                 "function": "toggle"
             }
         },
+        "properties": {
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": {
+                "function": "properties"
+            }
+        },
+        "items": {
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": {
+                "function": "items"
+            }
+        },
+        "control": {
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": {
+                "function": "control"
+            }
+        },
+        "keyId": {
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": {
+                "function": "keyId"
+            }
+        },
         "stepOrders": {
             "given": "$",
             "severity": "error",
             "then": {
                 "function": "stepOrders"
+            }
+        },
+        "register": {
+            "given": "$.properties.*.properties.*",
+            "severity": "error",
+            "then": {
+                "function": "register"
             }
         }
     }

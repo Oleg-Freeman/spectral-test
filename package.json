@@ -4,7 +4,7 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "start": "node app"
+        "lint": "spectral lint"
     },
     "author": "",
     "license": "ISC",
